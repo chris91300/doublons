@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Terminal = require('../../terminal/Terminal');
 const MESSAGES = require('../../../configuration/messages/messages');
- 
+  
 class AllOS{
     constructor(os){
         this.terminal = Terminal;
@@ -12,6 +12,21 @@ class AllOS{
 
     setDesktopPath(path){
         this.desktopPath = path;
+    }
+
+
+    getUserFolderAndDesktopFolder(pathToUserFolder){
+        let pathExist = this.pathExist(pathToUserFolder);
+
+        if( pathExist ){ 
+
+            pathExist = this.getPathToUserDesktop(pathToUserFolder); 
+            return pathExist  
+
+        } else {
+            this.displayErrorUserName();
+            return false;
+        }
     }
 
    

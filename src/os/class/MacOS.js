@@ -7,17 +7,7 @@ class MacOS extends AllOS{
     
     getPathToDesktop(name){
         const pathToUserFolder = `/Users/${name}`;
-        let pathExist = this.pathExist(pathToUserFolder);
-
-        if( pathExist ){ 
-
-            pathExist = this.getPathToUserDesktop(pathToUserFolder); 
-            return pathExist  
-
-        } else {
-            this.displayErrorUserName();
-            return false;
-        }
+        return this.getUserFolderAndDesktopFolder(pathToUserFolder); 
     }
 }
 
