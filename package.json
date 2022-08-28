@@ -1,0 +1,19 @@
+{
+  "name": "doublons",
+  "version": "1.0.0",
+  "description": "Scan folders et search copies ( identical files ).",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "Christophe MICHEL",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "fs.promises.exists": "^1.1.3",
+    "progress": "^2.0.3",
+    "readline-sync": "^1.4.10",
+    "stream-compare": "^3.0.0"
+  }
+}
