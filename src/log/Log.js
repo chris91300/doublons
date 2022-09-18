@@ -1,6 +1,12 @@
 
 const {  appendFile, mkdir } = require('fs').promises;
 
+
+/**
+ * @class Log
+ * Is an abstract class
+ * Its role is to write message on a file
+ */
 class Log{
 
     constructor(){
@@ -11,6 +17,10 @@ class Log{
         this.totalCharacterForLine = 200;
     }
 
+    /**
+     * add to an empty sentence the symbol '*' as many time as the value of this.totalCharacterForLine
+     * @returns {String} the line to write ( exemple => ****************** )
+     */
     getLine(){
         let line = '';
         for( let i = 1; i <= this.totalCharacterForLine; i++){
@@ -21,10 +31,26 @@ class Log{
 
     }
 
+    /**
+     * Write a message on a file
+     * @param {String} logFilePath the path of the file where to write
+     * @param {String} message the message to write
+     */
     async write(logFilePath, message){
-        await appendFile(logFilePath, message);
+        try{            
+            await appendFile(logFilePath, message);
+        }catch(err){
+            console.log(err)
+        }finally{
+            // continue
+        }
+        
     }
-
+ 
+    /**
+     * create a folder if it not exist
+     * @param {String} path the folder path
+     */
     async mkdirPath(path){
         await mkdir(path, {recursive: true});
     }

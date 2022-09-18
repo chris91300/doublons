@@ -3,14 +3,14 @@ const MacOS = require("./class/MacOS");
 const LinuxOS = require("./class/LinuxOS");
 
 /**
- * get the good osComputer
- * pour information:
- * pris en charge =>
+ * get the good OS class
+ * informations:
+ * OS supported =>
  * darwin --> Darwin platform(MacOS, IOS etc);
  * linux --> Linux Platform;
  * win32 --> windows platform;
  * 
- * pas pris en charge =>
+ * OS not supported =>
  * aix --> IBM AIX platform;
  * freebsd --> FreeBSD Platform;
  * openbsd --> OpenBSD platform;

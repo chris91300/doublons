@@ -2,9 +2,14 @@
 const CopyLog = require('../log/CopyLog');
 const ErrorLog = require('../log/ErrorLog');
 const Terminal = require('../terminal/Terminal');
-const { rename } = require('fs').promises;
 const MESSAGES = require('../../configuration/messages/messages');
+const moveFileFrom = require('./moveFileFrom');
 
+
+/**
+ * @class MoveFiles
+ * Its role is to iterate a list of copies and transfer each copy from a directory to another
+ */
 class MoveFiles{
     constructor(){
         this.log = CopyLog;
@@ -42,10 +47,10 @@ class MoveFiles{
         if( lengthList != 0 ){
             for( let originalFile in list ){
                 const {fileTypeFolderPath, copyList} = list[originalFile];
-                await this.log.addOrginalFile(originalFile, fileTypeFolderPath);
+                await this.log.addOriginalFile(originalFile, fileTypeFolderPath);
 
                 for( let copyInformations of copyList ){
-                    await this.moveFile(originalFile, copyInformations, fileTypeFolderPath, addOneToProgressBar); 
+                    await this.moveFile(copyInformations, fileTypeFolderPath, addOneToProgressBar); 
                 }
             }
         }
@@ -53,14 +58,13 @@ class MoveFiles{
 
     /**
      * transfer a copy to from the original folder to the final folder
-     * @param {string} originalFile the path of the original file
      * @param {string} copyOriginalPath the path of the original copy
      * @param {string} fileType le type of file (audio, document, picture, video)
      */
-     async moveFile(originalFile, { copyOriginalPath, copyFinalPath, copyNameHasBeenModified }, fileTypeFolderPath, addOneToProgressBar){       
-        try{   
-             await rename(copyOriginalPath, copyFinalPath);
-             this.log.writeEventInLog( fileTypeFolderPath, originalFile, copyOriginalPath, copyFinalPath, copyNameHasBeenModified );
+     async moveFile({ copyOriginalPath, copyFinalPath, copyNameHasBeenModified }, fileTypeFolderPath, addOneToProgressBar){       
+        try{ 
+            await moveFileFrom(copyOriginalPath).to(copyFinalPath);
+             this.log.writeEventInLog( fileTypeFolderPath, copyOriginalPath, copyFinalPath, copyNameHasBeenModified );
              addOneToProgressBar();
         }catch(err){
             const message = MESSAGES.moveFiles.error;

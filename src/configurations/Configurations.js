@@ -5,7 +5,7 @@ const config = require('../../configuration/config');
 const FileTypesConfiguration = require('./FileTypesConfiguration');
 const FoldersListConfiguration = require('./FoldersConfiguration');
 const NameConfiguration = require('./NameConfiguration');
-const searchOptionConfiguration = require('./searchOptionConfiguration');
+const SearchOptionConfiguration = require('./SearchOptionConfiguration');
 const MESSAGES = require('../../configuration/messages/messages');
 
 
@@ -25,7 +25,7 @@ class Configurations{
 
         this.folderRapportName = config.folderRapportName;       
         this.nameConfig = new NameConfiguration();
-        this.searchOptionConfig = new searchOptionConfiguration();
+        this.searchOptionConfig = new SearchOptionConfiguration();
         this.foldersConfig = new FoldersListConfiguration();
         this.fileTypesConfig = new FileTypesConfiguration();
         this.terminal = Terminal;
@@ -37,16 +37,18 @@ class Configurations{
     /**
      * get all the configuration (choice) of the user
      */
-    init(){
+    async init(){
         this.getOsComputer();
         this.askUserName();
-       // this.getPathToDesktop();
         this.askSearchOption();
         this.askDirectoriesList();
         this.askFileTypes();        
     }
 
 
+    /**
+     * get the os of the current computer
+     */
     getOsComputer(){
         this.osComputer = getOsComputer();
     }

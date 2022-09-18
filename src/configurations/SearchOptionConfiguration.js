@@ -1,8 +1,17 @@
 
 const Terminal = require("../terminal/Terminal");
-const MESSAGES = require('../../configuration/messages/messages')
+const MESSAGES = require('../../configuration/messages/messages');
+const configCodes = require("../../configuration/configCodes");
 
-class  searchOptionConfiguration{
+
+/**
+ * @class SearchOptionConfiguration
+ * Its role is to ask to the user if he want the application search 
+ * 1 - his desktop folder
+ * 2 - in one folder
+ * 3 - in several folder
+ */
+class  SearchOptionConfiguration{
     constructor(){
         this.terminal = Terminal;
         this.searchOptions = [
@@ -14,7 +23,7 @@ class  searchOptionConfiguration{
     }
 
 
-    // demande dans quel(s) dossier(s) on cherche
+    // offers search options
     askSearchOption(){
         
         const options = {cancel: MESSAGES.folderToScan.cancelOption}
@@ -26,7 +35,7 @@ class  searchOptionConfiguration{
         
         if( choice === -1){
             this.terminal.echoErrorMessage( MESSAGES.folderToScan.cancelWithClose )
-            process.exit(50)
+            process.exit(configCodes.closeWithoutTimer)
         }else{
             this.setSearchChoise(choice);
         }
@@ -44,4 +53,4 @@ class  searchOptionConfiguration{
 }
 
 
-module.exports = searchOptionConfiguration;
+module.exports = SearchOptionConfiguration;

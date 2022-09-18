@@ -3,7 +3,8 @@ const Terminal = require("../terminal/Terminal");
 const MESSAGES = require('../../configuration/messages/messages');
 
 /**
- * 
+ * @class NameConfiguration
+ * Its role is to ask and get the user name
  */
 class NameConfiguration{
     constructor(){

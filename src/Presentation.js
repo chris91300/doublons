@@ -1,10 +1,11 @@
 
 const Terminal = require("./terminal/Terminal");
-const MESSAGES = require('../configuration/messages/messages')//require('../configuration/configMessages');
+const MESSAGES = require('../configuration/messages/messages')
 
 
 
 /**
+ * @class Presentation
  * Display the presentation of the application
  * with title and a short presentation
  */

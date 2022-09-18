@@ -5,20 +5,30 @@ const configCodes = require('../../configuration/configCodes');
 const ErrorLog = require("../log/ErrorLog");
 
 
-
+/**
+ * @class  Process
+ * Its role is to close the application with the good message
+ */
 class Process{
+
     constructor(){
         this.terminal = Terminal;
         this.message = configMessages;
         this.codes = configCodes;
     }
 
-    startProcessIfApplicationisClose(){
-        let _this = this;
-        process.on('beforeExit', this.wereThereAnyErrors.bind(_this))
-        process.on("exit", this.closeApplication.bind(_this))
+    /**
+     * add callback to node events 'beforeExit' and 'exit'
+     */
+    startListenEventExitApplication(){
+        process.on('beforeExit', this.wereThereAnyErrors.bind(this))
+        process.on("exit", this.closeApplication.bind(this))
     }
 
+    /**
+     * call the good function in terms of the closing code
+     * @param {Number} code the closing code
+     */
     closeApplication(code){
         
         switch(code){
@@ -41,27 +51,40 @@ class Process{
         }
     }
 
+    /**
+     * close application with a message without timer
+     */
     closeWithoutTimer(){
-        this.terminal.echo('\n\n');
+        this.terminal.margin(2);
         this.terminal.echo(this.message.close.withoutTimer);
     }
 
 
+    /**
+     * close application with a message without enough file
+     */
     closeWithNotEnoughFile(){
-        this.terminal.echo('\n');
+        this.terminal.margin();
         this.terminal.echo(this.message.close.notEnoughFiles)
         this.closeWithoutTimer();
     }
 
 
+    /**
+     * close application with a message without copy found
+     */
     closeWithoutCopy(){
-        this.terminal.echo('\n');
+        this.terminal.margin();
         this.terminal.echo(this.message.close.noCopy);
         this.closeWithTimer();
     }
 
+
+    /**
+     * close application with a message with timer
+     */
     closeWithTimer(){
-        this.terminal.echo('\n\n');
+        this.terminal.margin(2);
         this.terminal.echoWithEndTimer(this.message.timer.processusFinished);
     }
 
@@ -71,17 +94,21 @@ class Process{
     }
 
 
+    /**
+     * if there were errors during the process
+     * inform the user
+     */
     wereThereAnyErrors(){
         const totalError = ErrorLog.getTotalError();
         if( totalError > 0 ){
             const errorWord = totalError === 1? 'error' : 'errors';
             const logFile = ErrorLog.getLogFilePath();
 
-            this.terminal.echo('\n');
+            this.terminal.margin();
             this.terminal.echoErrorMessage(`Il y a eu ${totalError} ${errorWord}.`);
             this.terminal.echoErrorMessage('Retrouver le rapport des erreurs dans le fichier :')
             this.terminal.echoErrorMessage(logFile);
-            this.terminal.echo('\n');
+            this.terminal.margin();
         }
     }
 

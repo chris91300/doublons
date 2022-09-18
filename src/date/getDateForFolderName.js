@@ -3,7 +3,7 @@
  * extract to the date the day, month and year for locale
  * and replace all '/' in the date by '_';
  * @param {object} date 
- * @returns the good format to add date to the folder name
+ * @returns the good format to add date to the folder name ( FORMAT => day_month_year_hour_min )
  */
 const getDateForFolderName = (date) => {
 

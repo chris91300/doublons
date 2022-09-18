@@ -6,7 +6,7 @@
  */
  const selectedFolder = () => {
 
-    const pathNoValid = "Le chemin d'accès à votre Bureau n'est pas valide.";
+    const pathNoValid = "Le chemin d'accès à votre dossier n'est pas valide.";
     const forWindows = 'C:/users/name/mon_dossier';
     const forMac = '/users/name/Bureau/mon_dossier';
     const forLinux = '/home/name/Bureau/mon_dossier';

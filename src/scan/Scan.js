@@ -5,6 +5,12 @@ const getFileExtension = require('./getFileExtension');
 const Terminal = require('../terminal/Terminal');
 const MESSAGES = require('../../configuration/messages/messages')
 
+
+/**
+ * @class Scan
+ * its role is to research in folders and subfolders the file with an extension to found.
+ * And save the file in a list
+ */
 class Scan{
 
     constructor(){
@@ -38,7 +44,12 @@ class Scan{
     }
 
 
-    // search in the current folder and subfolder
+    
+    /**
+     * search in the current folder and subfolder files with an extension valid
+     * @param {String} folder folder path
+     * @param {Object} extensionsToSearch list of extensions
+     */
     async scanFolder(folder, extensionsToSearch){
         const files = await fs.readdir(folder);
 
@@ -56,6 +67,13 @@ class Scan{
     }
 
 
+    /**
+     * if extension list include the extension of the file
+     * insert the file into the list of files found 
+     * @param {String} filePath 
+     * @param {String} extFile 
+     * @param {String} extensionsToSearch 
+     */
     compareExtensionFileWithExtensionsToSearch(filePath, extFile, extensionsToSearch){
         for( let fileType in extensionsToSearch ){
             this.initializeFileTypeInFilesFound(fileType);
@@ -68,13 +86,10 @@ class Scan{
     }
 
 
-    addFileInTheFilesList(filePath, fileType, extFile){
-        this.initializeFileExtensionInFilesFound(fileType, extFile); 
-        this.filesFound[fileType][extFile].push(filePath);
-        this.totalFilesFound ++;
-    }
-
-
+    /**
+     * create an object in which push files with the same type
+     * @param {String} fileType 
+     */
     initializeFileTypeInFilesFound(fileType){
         if( !this.filesFound.hasOwnProperty(fileType) ){
             this.filesFound[fileType] = {};
@@ -82,6 +97,24 @@ class Scan{
     }
 
 
+    /**
+     * add a file in the list of files with the same type and extension
+     * @param {String} filePath 
+     * @param {String} fileType 
+     * @param {String} extFile 
+     */
+    addFileInTheFilesList(filePath, fileType, extFile){
+        this.initializeFileExtensionInFilesFound(fileType, extFile); 
+        this.filesFound[fileType][extFile].push(filePath);
+        this.totalFilesFound ++;
+    }
+    
+
+    /**
+     * create an array in which push file with the same type and the same extension
+     * @param {String} fileType 
+     * @param {String} extFile 
+     */
     initializeFileExtensionInFilesFound(fileType, extFile){
         if( !this.filesFound[fileType].hasOwnProperty(extFile) ){
             this.filesFound[fileType][extFile] = [];

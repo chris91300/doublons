@@ -1,10 +1,13 @@
 
 const fs = require('fs');
 const Terminal = require("../terminal/Terminal");
-//const OPTIONS_FOLDERS = require('../../configuration/configOptionsFolderToScan');
-//const MESSAGES = require('../../configuration/configMessages');
 const MESSAGES = require('../../configuration/messages/messages');
 
+
+/**
+ * @class FoldersConfiguration
+ * Its role it's to get folder where the application must search copies
+ */
 class FoldersConfiguration{
 
     constructor(){
@@ -15,9 +18,9 @@ class FoldersConfiguration{
 
     /**
      * ask to the user in which folder(s) the application can search doublons
-     * @param {*} option 
-     * @param {*} os 
-     * @param {*} desktopPath 
+     * @param {String} option the option choice by user
+     * @param {String} os os computer
+     * @param {String} desktopPath 
      */
      askFoldersWhereToSearch(option, os, desktopPath){
        
@@ -44,29 +47,38 @@ class FoldersConfiguration{
 
     // set the desktop path to the list of folders
     addDesktopPathInFoldersList(desktopPath){
-        let pathIsValid = this.setFolderInList(desktopPath);
-        if ( !pathIsValid){
+        if ( this.pathIsValid(desktopPath) ){
+            this.setFolderInList(desktopPath);
+        }else{
             throw new Error(MESSAGES.selectedFolder.pathNoValid);
         }
     }
 
 
-    // ask the unique folder where the application can search
+
+    /**
+     * ask the unique folder where the application can search
+     * @param {String} os os computer
+     */
     askTheFolder(os){
         this.terminal.echo(MESSAGES.selectedFolder.choosen.oneFolder.text);
         this.echoPathExemple(os);
         let path = this.terminal.question(MESSAGES.selectedFolder.choosen.oneFolder.question);
         path = this.getEnglishPath(path);
-        let pathIsValid = this.setFolderInList(path);
         
-        if ( !pathIsValid ){
+        if ( this.pathIsValid(path) ){
+            this.setFolderInList(path);
+        }else{
             this.askTheFolder(os);
         }
     }    
 
     
 
-// ask folders where the application can search
+    /**
+     * ask folders where the application can search
+     * @param {String} os os computer
+     */
     askFolders(os){
         let totalDirectories = 1;
         let askDirectory = true;
@@ -80,8 +92,9 @@ class FoldersConfiguration{
                 askDirectory = false;
             } else {
                 path = this.getEnglishPath(path);
-                let pathIsValid = this.setFolderInList(path);
-                if( pathIsValid ){
+                
+                if( this.pathIsValid(path) ){
+                    this.setFolderInList(path)
                     totalDirectories++;
                 }                
             }
@@ -90,7 +103,7 @@ class FoldersConfiguration{
 
 
     // ask to the terminal to show an exemple of folder path pattern in terms of os 
-    // MODIFIER ICI => METTRE LE SWITCH DANS OS COMPUTER
+    // TODO MODIFIER ICI => METTRE LE SWITCH DANS OS COMPUTER
     echoPathExemple(os){
         let exemple = 'Exemple : ';
         switch(os){
@@ -114,6 +127,11 @@ class FoldersConfiguration{
     }
 
 
+    /**
+     * translate french path for english path
+     * @param {String} path path folder
+     * @returns {String} the path translated
+     */
     getEnglishPath(path){
         path = path.replace("C:/Utilisateurs", "C:/Users");
         path = path.replace("C:/Programmes", "C:/Program Files");
@@ -121,25 +139,35 @@ class FoldersConfiguration{
     }
 
 
-    setFolderInList(path){
-        let pathExist = false;
-
+    /**
+     * Verify if the path exist
+     * @param {String} path 
+     * @returns {Boolean} if the path exist
+     */
+    pathIsValid(path){
+        let pathIsValid = false;
         if ( fs.existsSync(path) ){
-
-            this.foldersList.push(path);
-            pathExist = true;
-
-        } else {
-
-            this.terminal.echoErrorMessage(MESSAGES.selectedFolder.pathNoValid);            
-            
+            pathIsValid = true;
+        }else{
+            this.terminal.echoErrorMessage(MESSAGES.selectedFolder.pathNoValid);
         }
 
-        return pathExist;
-        
+        return pathIsValid;
     }
 
 
+    /**
+     * add the path to the list of folder to scan
+     * @param {String} path the path folder
+     */
+    setFolderInList(path){
+        this.foldersList.push(path);
+    }
+
+
+    /**
+     * @returns {Object} the folder list to scan
+     */
     getFoldersList(){
         return this.foldersList;
     }

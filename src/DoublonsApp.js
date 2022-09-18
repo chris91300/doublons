@@ -13,6 +13,11 @@ const MoveFiles = require('./move/MoveFiles');
 const ErrorLog = require('./log/ErrorLog');
 
 
+/**
+ * @class DoublonsApp
+ * This is the main class.
+ * It controle all the application.  
+ */
 class DoublonsApp {
 
     constructor(){
@@ -25,60 +30,85 @@ class DoublonsApp {
         this.searchCopies = new SearchCopies();
         this.moveFiles = new MoveFiles();
         
-        this.startProcessIfApplicationisClose();
+        this.startListenEventExitApplication();
     }
 
-    // à la fin du traitement, on affiche le message de fin
-    startProcessIfApplicationisClose(){
-        this.process.startProcessIfApplicationisClose();
+    
+    /**
+     * add an event when the application exit
+     */
+    startListenEventExitApplication(){
+        this.process.startListenEventExitApplication();
     }
 
 
-    //  on lance l'application
-    start(){         
+    /**
+     * Start the application
+     * 1 - display the welcome message
+     * 2 - get informations about user
+     * 3 - scan folders and search copies
+     */
+    async start(){         
         this.displayPresentation();
-        this.getConfigurations();
-        this.scanFolders();  
+        await this.getConfigurations();
+        await this.scanFolders();
+        this.displayInformationsAboutFilesFound();
+        this.startTimerForAnalyse();
+        await this.startToSearchCopies();
+        await this.writeHistory();
+        await this.moveCopies();
+        this.displayEnd();
     }
 
-    // affiche la présentation de l'application
+
+    /**
+     * display the welcome message
+     */
     displayPresentation(){
         this.presentation.displayPresentation();
         
     }
 
-
-    getConfigurations(){
-        this.configurations.init();
+    /**
+     * get informations about user
+     */
+    async getConfigurations(){
+        await this.configurations.init();
     }
 
 
+    /**
+     * scan folders and search copies
+     */
     async scanFolders(){
         const folders = this.configurations.getFoldersList();
         const extensions = this.configurations.getExtensionsToScan();
 
-        const scanCompleted = await this.scan.scanFolders(folders, extensions);
-        if( scanCompleted){           
-            
-            this.displayInformationsAboutFilesFound();
-            this.startToSearchCopies();
-        }
-        
+        await this.scan.scanFolders(folders, extensions);        
     }
 
 
-    displayInformationsAboutFilesFound(){
+    /**
+     * display informations about how many files the application found
+     */
+    displayInformationsAboutFilesFound(){        
         this.displayTotalFilesFound();
         this.displayTotalOfEachType();
     }
 
 
+    /**
+     * display the total files found
+     */
     displayTotalFilesFound(){
         let totalFilesFound = this.scan.getTotalFilesFound();
         this.terminal.echo(`Nombre total de fichier trouvé : ${totalFilesFound}`);
     }
 
 
+    /**
+     * display total files found for each type of files
+     */
     displayTotalOfEachType(){
         let files = this.scan.getfilesFound();       
         
@@ -93,7 +123,7 @@ class DoublonsApp {
     /**
      * calcul the total of files found in the type pass to parameter
      * @param {object} files 
-     * @returns the total
+     * @returns the total of files
      */
     getTotalOfFileTypesFound(files){
         let total = 0;
@@ -104,54 +134,74 @@ class DoublonsApp {
 
         return total;
     }
+
+
+    /**
+     * start the chronometer in order to know how long the application took to do its job
+     */
+    startTimerForAnalyse(){
+        this.terminal.echoWithStartTimer(MESSAGES.timer.processusFinished);
+    }
     
 
-    //  on commence à rechercher dans les fichiers trouvés les doublons
-    startToSearchCopies(){
+    
+    /**
+     * start to compare all files found
+     */
+    async startToSearchCopies(){        
         const totalFilesFound = this.scan.getTotalFilesFound();
+
         if( totalFilesFound < 2  ){
             this.close(CODE.closeWithNotEnoughFile);
         }else {
-            this.continueAndAnalyseFilesFound();
+            await this.compareFiles();
         }
         
     }
 
 
-    async continueAndAnalyseFilesFound(){
-        this.startTimerForAnalyse();
+    /**
+     * search copies ( compare files ) in the files found
+     */
+    async compareFiles(){
         const files = this.scan.getfilesFound();
-        await this.searchCopies.start(files);
 
-        await CopyController.writeHistory();
-        await this.moveCopies();
-        this.displayEnd();
-        
+        await this.searchCopies.start(files);        
     }
 
 
-    async moveCopies(){
+
+    /**
+     * write in a json file
+     * copies found,
+     * original path of the copy,
+     * new path of the copy,
+     * and the original file of the copy
+     */
+    async writeHistory(){
+        await CopyController.writeHistory();
+    }   
+
+
+    /**
+     * move the found copies to the folder generate by the application
+     */
+    async moveCopies(){        
         const list = await CopyController.getCopyList(); 
         const totalCopies = CopyController.getTotalCopies(); 
+
         if( totalCopies > 0 ){
             await this.moveFiles.moveCopiesFound(list, totalCopies);
         }      
         
     }
 
-
-    startTimerForAnalyse(){
-        this.terminal.echoWithStartTimer(MESSAGES.timer.processusFinished);
-    }
-
    
-
-    //  informe l'utilisateur du dossier dans lequel on mettra les doublons
-    // mettre plutot ça a la fin du processus.
-    // genre scan terminé. Vous trouverez les doublons et les rapport dans le dossier
-    // path ...
-    displayEnd(){
-
+    
+    /**
+     * display the end message to the user
+     */
+    displayEnd(){        
         const totalCopiesFound = this.searchCopies.getTotalCopies();
 
         if( totalCopiesFound === 0 ){
@@ -163,22 +213,32 @@ class DoublonsApp {
         
     }
 
+
+    /**
+     * application closing with no copy found
+     */
     displayEndWhitoutCopy(){
         this.close(CODE.closeWithoutCopy);
     }
 
+
+    /**
+     * application closing with copies found
+     */
     displayEndWithCopies(){
         const desktopPath = this.configurations.getDesktopPath();
         const folderRapportName = this.configurations.getFolderRapportName();
         const rapportPath = `${desktopPath}/${folderRapportName}`;
         
-        this.terminal.echo('\nTerminé.');
-        this.terminal.echo('Retrouver les doublons trouvés et les rapport dans le dossier :');
+        this.terminal.margin();
+        this.terminal.echo('Terminé.'.toUpperCase());
+        this.terminal.margin();
+        this.terminal.echo('Retrouver les doublons trouvés et les rapports dans le dossier :');
         this.terminal.echo(rapportPath);
     }
 
 
-    // ferme l'application
+    // close the application
     close(code=0){
         this.process.close(code);
     }

@@ -1,14 +1,13 @@
 
-const {renameSync } = require('fs');
-
+const { rename } = require('fs').promises;
 /**
- * transfère un fichier dans un autre fichier
- * @param {string} orginalPath 
- * @returns 
+ * Transfert a file from one folder to another
+ * @param {string} orginalPath original path of the file
+ * @returns {Object} contains an async function get the final path on parameter to transfert the file
  */
 const moveFileFrom = ( originalPath ) => {  
     return {
-        to: (finalPath) => renameSync(originalPath, finalPath)
+        to: async (finalPath) => await rename(originalPath, finalPath)
     }
 
 }
