@@ -16,8 +16,8 @@ const config = (actionForImgOrPdf = 'remove')=>{
     const year2 = year * 2;
 
         
-    //  Dossier du rapport final
-    process.env.LOG_DIR = 'C:\\users\\christophe\\Bureau\\rapport_doublons\\';
+    //  Dossier du report final
+    process.env.LOG_DIR = 'C:\\users\\christophe\\Bureau\\report_doublons\\';
 
     //  Dossier pour les doublons possibles 
     process.env.POSSIBLE_DUPLICATE_DIR = `${process.env.LOG_DIR}doublons_possibles\\`;
@@ -60,13 +60,13 @@ const config = (actionForImgOrPdf = 'remove')=>{
 const getDateForFolderName = require("../src/date/getDateForFolderName");
 
 const config = ()=>{
-    const rapportName = "vos_doublons";
+    const reportName = "vos_doublons";
     const date = new Date();
-    const rapportCurrentScanName = getDateForFolderName(date);
-    const folderRapportName = `${rapportName}/${rapportCurrentScanName}`;
+    const reportCurrentScanName = getDateForFolderName(date);
+    const folderReportName = `${reportName}/${reportCurrentScanName}`;
     const configuration = {
-        folderRapportName: folderRapportName,
-       // folderRapportCurrentScanName: rapportCurrentScanName
+        reportName,
+        folderReportName
     }
 
     return Object.freeze(configuration);

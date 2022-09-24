@@ -85,9 +85,9 @@ class ErrorLog extends Log{
      * @returns {String} the path of the error folder
      */
     getLogFolderPath(){
-        const rapportPath = this.config.getDesktopPath(); 
-        const folderRapportName = this.config.getFolderRapportName();
-        return `${rapportPath}/${folderRapportName}/${this.errorFolder}`;
+        const reportPath = this.config.getDesktopPath(); 
+        const folderReportName = this.config.getFolderReportName();
+        return `${reportPath}/${folderReportName}/${this.errorFolder}`;
     }
 
 

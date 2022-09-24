@@ -23,7 +23,7 @@ class Configurations{
         }
         instance = this;
 
-        this.folderRapportName = config.folderRapportName;       
+        this.folderReportName = config.folderReportName;       
         this.nameConfig = new NameConfiguration();
         this.searchOptionConfig = new SearchOptionConfiguration();
         this.foldersConfig = new FoldersListConfiguration();
@@ -132,8 +132,8 @@ class Configurations{
     }
 
 
-    getFolderRapportName(){
-        return this.folderRapportName;
+    getFolderReportName(){
+        return this.folderReportName;
     }
     
 }

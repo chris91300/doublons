@@ -227,14 +227,14 @@ class DoublonsApp {
      */
     displayEndWithCopies(){
         const desktopPath = this.configurations.getDesktopPath();
-        const folderRapportName = this.configurations.getFolderRapportName();
-        const rapportPath = `${desktopPath}/${folderRapportName}`;
+        const folderReportName = this.configurations.getFolderReportName();
+        const reportPath = `${desktopPath}/${folderReportName}`;
         
         this.terminal.margin();
         this.terminal.echo('Terminé.'.toUpperCase());
         this.terminal.margin();
-        this.terminal.echo('Retrouver les doublons trouvés et les rapports dans le dossier :');
-        this.terminal.echo(rapportPath);
+        this.terminal.echo('Retrouver les doublons trouvés et les reports dans le dossier :');
+        this.terminal.echo(reportPath);
     }
 
 

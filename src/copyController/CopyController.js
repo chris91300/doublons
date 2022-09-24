@@ -49,9 +49,9 @@ class CopyController{
        * @returns the folder path
        */
     getTypeFolderPath(fileType){
-        const rapportPath = this.config.getDesktopPath(); 
-        const folderRapportName = this.config.getFolderRapportName();
-        const path = `${rapportPath}/${folderRapportName}/${fileType}`;
+        const reportPath = this.config.getDesktopPath(); 
+        const folderReportName = this.config.getFolderReportName();
+        const path = `${reportPath}/${folderReportName}/${fileType}`;
       
         return path;
     }
@@ -185,7 +185,7 @@ class CopyController{
     }
 
 
-    // TODO ajouter un rapport erreur si err et créer une class History
+    // TODO ajouter un report erreur si err et créer une class History
     /**
      * write in a file the copies list
      */
