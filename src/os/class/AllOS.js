@@ -20,7 +20,7 @@ class AllOS{
     }
 
 
-    //TODO à modifier not unique function
+    //TODO: à modifier not unique function
     /**
      * verify if user folder path and desktop path exist
      * @param {String} pathToUserFolder 

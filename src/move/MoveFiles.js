@@ -29,12 +29,20 @@ class MoveFiles{
         this.terminal.margin(2);
         this.terminal.echoH3(MESSAGES.moveFiles.title); 
         this.terminal.setProgressBar(this.progressBarName, totalCopies);
-        const addOneToProgressBar = ()=>this.terminal.setOneToProgressBar(1, this.progressBarName);
+        const addOneToProgressBar = this.getFunctionAddOneToProgressBar();
         const lengthList = Object.keys(list).length;
 
         await this.moveCopies(list, lengthList, addOneToProgressBar);
         
     }
+
+    /**
+     * return a function which add one to a progress bar
+     * @returns {Function} the function add one to a progress bar
+     */
+    getFunctionAddOneToProgressBar(){
+        return () => this.terminal.setOneToProgressBar(1, this.progressBarName);
+    } 
 
 
     /**

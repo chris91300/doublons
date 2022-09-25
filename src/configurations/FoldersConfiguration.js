@@ -103,7 +103,7 @@ class FoldersConfiguration{
 
 
     // ask to the terminal to show an exemple of folder path pattern in terms of os 
-    // TODO MODIFIER ICI => METTRE LE SWITCH DANS OS COMPUTER
+    //TODO: MODIFIER ICI => METTRE LE SWITCH DANS OS COMPUTER
     echoPathExemple(os){
         let exemple = 'Exemple : ';
         switch(os){
