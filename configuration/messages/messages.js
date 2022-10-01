@@ -10,6 +10,7 @@ const MESSAGES_MOVE_FILES = require('./moveFiles');
 const MESSAGES_TIMER = require('./timer');
 const MESSAGES_SEARCH = require('./search');
 const MESSAGES_CLOSE = require('./close');
+const MESSAGES_REVERSE = require('./reverse');
 
 const MESSAGES = ()=>{
 
@@ -25,6 +26,7 @@ const MESSAGES = ()=>{
         search: { ...MESSAGES_SEARCH },
         timer:{ ...MESSAGES_TIMER },
         close:{ ...MESSAGES_CLOSE },
+        reverse: { ...MESSAGES_REVERSE }
     }
 
 }

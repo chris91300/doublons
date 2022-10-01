@@ -1,8 +1,17 @@
 
 const DoublonsApp = require('./src/DoublonsApp');
-const doublonsApp = new DoublonsApp();
+const Reverse = require('./src/reverse/Reverse');
+const doesUserWantReverseOption = require('./src/utils/doesUserWantReverseOption');
 
-doublonsApp.start();
+
+const userWantReverse = doesUserWantReverseOption();
+
+if( userWantReverse ){
+    new Reverse();
+} else{
+    const doublonsApp = new DoublonsApp();
+    doublonsApp.start();
+}
 
 
 
